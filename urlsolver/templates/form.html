@@ -24,7 +24,7 @@
         <th>Short Link</th>
         <th>Destination</th>
     </tr>
-    {{range $key, $value := .Mappings}}
+    {{range $key, $value := .UrlMapping}}
     <tr>
         <td><a href="http://localhost:{{$.Port}}{{$key}}">{{$key}}</a></td>
         <td>{{$value}}</td>
