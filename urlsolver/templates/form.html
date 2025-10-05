@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Shortener</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        input { display: block; margin-bottom: 1em; }
+        table { border-collapse: collapse; margin-top: 2em; }
+        th, td { border: 1px solid #ccc; padding: 0.5em; }
+    </style>
+</head>
+<body>
+<h1>URL Shortener</h1>
+<form method="post" action="/shorten">
+    <label for="short">Short URL:</label>
+    <input type="text" id="short" name="short" placeholder="go" required>
+    <label for="long">Long URL:</label>
+    <input type="url" id="long" name="long" placeholder="https://golang.org" required size="50">
+    <input type="submit" value="Save">
+</form>
+<h2>Existing Links</h2>
+<table>
+    <tr>
+        <th>Short Link</th>
+        <th>Destination</th>
+    </tr>
+    {{range $key, $value := .Mappings}}
+    <tr>
+        <td><a href="http://localhost:{{$.Port}}{{$key}}">{{$key}}</a></td>
+        <td>{{$value}}</td>
+    </tr>
+    {{end}}
+</table>
+</body>
+</html>

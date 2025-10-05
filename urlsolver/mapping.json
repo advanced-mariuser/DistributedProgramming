@@ -1,0 +1,9 @@
+{
+  "paths" : {
+    "/go-http" : "https://golang.org/pkg/net/http/",
+    "/go-gophers": "https://github.com/shalakhin/gophericons/blob/master/preview.jpg",
+    "/go": "https://golang.org",
+    "/google": "https://google.com",
+    "/youtube": "https://youtube.com"
+  }
+}
