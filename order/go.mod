@@ -1,8 +1,8 @@
 module order
 
-go 1.23.0
+go 1.25.3
 
-toolchain go1.24.9
+replace gitea.xscloud.ru/xscloud/golib v1.1.0 => github.com/veresnikov/rp-golib v1.1.0
 
 require (
 	github.com/go-sql-driver/mysql v1.9.3
@@ -20,6 +20,7 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
+	gitea.xscloud.ru/xscloud/golib v1.1.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect

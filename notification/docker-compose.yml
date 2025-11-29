@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+  notification:
+    image: notification
+    container_name: notification
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081" # GRPC API port
+    environment:
+      ORDER_DB_HOST: notification-db
+      ORDER_DB_PORT: 3306
+      ORDER_DB_NAME: notification
+      ORDER_DB_USER: notification
+      ORDER_DB_PASSWORD: ${DB_PASSWORD}
+      ORDER_DB_MAX_CONN: 5
+    depends_on:
+      - notification-db
+    restart: unless-stopped
+
+  notification-db:
+    image: percona:8.0
+    container_name: notificationservice-db
+    environment:
+      MYSQL_DATABASE: notificationservice
+      MYSQL_USER: notificationservice
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - notification-db-data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  notification-db-data:

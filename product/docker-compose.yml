@@ -1,0 +1,78 @@
+services:
+  productservice:
+    image: productservice
+    container_name: productservice
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      - service
+    ports:
+      - "8081:8081"
+    environment:
+      PRODUCT_DATABASE_HOST: productservice-db
+      PRODUCT_DATABASE_NAME: productservice_db
+      PRODUCT_DATABASE_USER: productservice
+      PRODUCT_DATABASE_PASSWORD: 12345Q
+    depends_on:
+      productservice-db:
+        condition: service_healthy
+
+  productservice-message-handler:
+    image: productservice
+    container_name: productservice-message-handler
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      - message-handler
+    environment:
+      PRODUCT_DATABASE_HOST: productservice-db
+      PRODUCT_DATABASE_NAME: productservice_db
+      PRODUCT_DATABASE_USER: productservice
+      PRODUCT_DATABASE_PASSWORD: 12345Q
+
+      PRODUCT_AMQP_HOST: productservice-rmq
+      PRODUCT_AMQP_USER: guest
+      PRODUCT_AMQP_PASSWORD: guest
+    depends_on:
+      productservice-db:
+        condition: service_healthy
+      productservice-rmq:
+        condition: service_healthy
+
+  productservice-db:
+    image: "mysql:8.3"
+    container_name: productservice-db
+    command: [ "--max_connections=100" ]
+    volumes:
+      - "productservice-db-data:/var/lib/mysql"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_DATABASE: productservice_db
+      MYSQL_USER: productservice
+      MYSQL_PASSWORD: 12345Q
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: mysql -h127.0.0.1 -uroot -e 'SELECT 1'
+      interval: 10s
+      timeout: 30s
+
+  productservice-rmq:
+    image: "rabbitmq:4.2.0-management-alpine"
+    container_name: productservice-rmq
+    hostname: productservice-rmq
+    ports:
+      - "15672:15672"
+    volumes:
+      - "productservice-rmq-data:/var/lib/rabbitmq/mnesia"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  productservice-db-data:
+  productservice-rmq-data:
